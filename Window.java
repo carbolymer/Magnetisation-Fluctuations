@@ -12,26 +12,47 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 
+/*
+ * Glowna klasa rysujaca okno
+ */
 public class Window extends JFrame
 {
-	JPanel graph = new Graph(), right =  new JPanel() ,controls = new JPanel(new GridBagLayout());
-	String positiveDirection = new String("<html><h1>&#8857;</h1></html>");
-	String negativeDirection = new String("<html><h1>&#8855</h1></html>");
+	// panel na ktorym znajduje sie wykres
+	Graph graph = new Graph();
+	// panel zawierajacy kontrolki
+	JPanel right =  new JPanel() ,controls = new JPanel(new GridBagLayout());
+	// oznaczenia "przed" i "za" ekranem
+	static String positiveDirection = new String("<html><h1>&#8857;</h1></html>");
+	static String negativeDirection = new String("<html><h1>&#8855</h1></html>");
+	// tekst informujacy o kierunku pola magnetycznego
 	JLabel magFieldDirection = new JLabel(positiveDirection);
+	// wartosc fluktuacji
 	JLabel fluctuation = new JLabel("1.734");
-	JSlider magFieldSlider = new JSlider(-10, 10, 3);
+	// suwak i spinner od regulacji natezenia zewnetrznego pola magnetycznego
+	JSlider magFieldSlider = new JSlider(-1000, 1000, 0);
 	JSpinner magFieldSpinner =  new JSpinner();
-
+	// suwak i spinner od regulacji temperatury
 	JSlider tempSlider = new JSlider(0, 300,100);
 	JSpinner tempSpinner =  new JSpinner();
-	
-	JSlider sizeSlider = new JSlider(1,200,100);
+	// 18-krokowa regulacja zlozonosci wykresu
+	JSlider sizeSlider = new JSlider(1,18,14);
 	JLabel plotDimension = new JLabel("10000");
+	
+	GraphUpdater gu;
 	
 	public Window()
 	{
 		super();
-		createGUI();
+		// obiekt aktualizujacy dane
+		gu = new GraphUpdater(graph, this);
+		javax.swing.SwingUtilities.invokeLater(new Runnable()
+		{
+            public void run()
+            {
+            	createGUI();
+            	gu.update();
+            }
+        });
 	}
 	
 	public static void main(String[] args)
@@ -41,11 +62,15 @@ public class Window extends JFrame
 	
 	public void createGUI()
 	{
+		// interfejs
 		GridBagConstraints c = new GridBagConstraints();
+		ModificationListener.SpinnerChange spinnerChange = new ModificationListener.SpinnerChange(this);
+		ModificationListener.SliderChange sliderChange = new ModificationListener.SliderChange(this);
 		
-		setSize(800,700);
+		setSize(800,600);
 		setTitle("Fluktuacje magnetyzacji");
 		setLayout(new BorderLayout());
+		setResizable(false);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy = 0;
@@ -59,20 +84,20 @@ public class Window extends JFrame
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		controls.add(new JLabel("Natężenie pola H:"),c);
+		controls.add(new JLabel("Natężenie pola H [MT]:"),c);
 		
 		c.gridx = 2;
 		c.gridwidth = 1;
 		magFieldSpinner.setPreferredSize(new Dimension(30, 20));
-		magFieldSpinner.addChangeListener(new ModificationListener.SpinnerChange(this));
+		magFieldSpinner.addChangeListener(spinnerChange);
 		controls.add(magFieldSpinner,c);
 
 		magFieldSlider.setPaintLabels(true);
 		magFieldSlider.setPaintTicks(true);
-		magFieldSlider.setMajorTickSpacing(5);
-		magFieldSlider.setMinorTickSpacing(1);
+		magFieldSlider.setMajorTickSpacing(500);
+		magFieldSlider.setMinorTickSpacing(100);
 		magFieldSlider.setPreferredSize(new Dimension(290, 50));
-		magFieldSlider.addChangeListener(new ModificationListener.SliderChange(this));
+		magFieldSlider.addChangeListener(sliderChange);
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 3;
@@ -81,20 +106,20 @@ public class Window extends JFrame
 		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 1;
-		controls.add(new JLabel("Temperatura:"),c);
+		controls.add(new JLabel("Temperatura [K]:"),c);
 
 		c.gridx = 2;
 		c.gridwidth = 1;
 		tempSpinner.setPreferredSize(new Dimension(40, 20));
-		tempSpinner.addChangeListener(new ModificationListener.SpinnerChange(this));
+		tempSpinner.addChangeListener(spinnerChange);
 		controls.add(tempSpinner,c);
 		
 		tempSlider.setPaintLabels(true);
 		tempSlider.setPaintTicks(true);
 		tempSlider.setMajorTickSpacing(100);
-		tempSlider.setMinorTickSpacing(25);
+		tempSlider.setMinorTickSpacing(20);
 		tempSlider.setPreferredSize(new Dimension(290, 50));
-		tempSlider.addChangeListener(new ModificationListener.SliderChange(this));
+		tempSlider.addChangeListener(sliderChange);
 		c.gridx = 0;
 		c.gridy = 4;
 		c.gridwidth = 3;
@@ -112,10 +137,10 @@ public class Window extends JFrame
 		
 		sizeSlider.setPaintLabels(false);
 		sizeSlider.setPaintTicks(true);
-		sizeSlider.setMajorTickSpacing(50);
-		sizeSlider.setMinorTickSpacing(10);
+		sizeSlider.setMajorTickSpacing(3);
+		sizeSlider.setMinorTickSpacing(1);
 		sizeSlider.setPreferredSize(new Dimension(290, 50));
-		sizeSlider.addChangeListener(new ModificationListener.SliderChange(this));
+		sizeSlider.addChangeListener(sliderChange);
 		
 		c.gridx = 0;
 		c.gridy = 6;
