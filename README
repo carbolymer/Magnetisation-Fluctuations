@@ -1,0 +1,4 @@
+== Magnetisation Fluctuation ==
+Simple java application to simulate ideal paramagnetic substances.
+Plots the spin distribution through the substance and calculates 
+value of the fluctuation.
