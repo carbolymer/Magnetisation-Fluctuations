@@ -1,0 +1,53 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[T1]{fontenc}
+\usepackage{enumerate}
+\usepackage{indentfirst}
+\author{Mateusz Gałażyn, Mateusz Tuszczewski}
+\title{Symulacja fluktuacji magnetyzacji idealnego paramagnetyka w zewnętrznym polu magnetycznym}
+\setlength{\topmargin}{0mm}
+\frenchspacing
+\begin{document}
+	\maketitle
+	\section{Model Isinga}
+	Energia jednowymiarowego łańcucha cząstek w modelu Isinga jest określona zależnością \cite{az}:
+	\[ E = -\sum^{N-1}_{i=1} J s_{i} s_{i+1} - H M \]
+	Magnetyzacja paramagnetyka wynosi:
+	\[ M = \gamma \sum^{N}_{i=1}s_{i} = \gamma N \langle s \rangle \]
+	gdzie $J$ - oddziaływanie między węzłami, $s_{i}$ - spin i-tej cząstki w łańcuchu $s_{i} \in \{-1,1\}$, $\gamma$ - współczynnik proporcjonalności oddziaływania jednego elementu łańcucha z polem magnetycznym $H$, $N$ - ilość cząstek w łańcuchu, $\langle s \rangle$ - wartość średnia spinu w łańcuchu. W przypadku idealnego paramagnetyka mamy do czynienia z brakiem oddziaływania pomiędzy poszczególnymi spinami, więc współczynnik $J = 0$. Dla paramagnetyka energia oddziaływania pojedynczej cząstki wynosi $E_i = - \gamma H s_{i}$, a dla substancji wyraża się wzorem:
+	\[ E = \sum^{N}_{i=1} E_{i} =-\gamma H \sum^{N}_{i=1}s_{i} = -\gamma H \langle s \rangle\]
+	Rozkład prawdopodobieństwa wystąpienia danego spinu dla cząstki jest rozkładem kanonicznym. Jednocząstkowa suma statystyczna wynosi\cite{az}:
+	\[ z_{i} = e^{- \beta \gamma H } + e^{\beta \gamma H} = 2 \cosh(\beta \gamma H); \hspace{1cm} \beta = \frac{1}{k_{B}T}  \]
+	Prawdopodobieństwo wystąpienia spinu w łańcuchu:
+	\[
+	p(s_i) = \left\{ \begin{array}{lll}
+	\alpha & = e^{\beta \gamma H} / z_{i}, & \mbox{ gdy } s_i = 1 \\
+	1-\alpha & = e^{ -\beta \gamma H} / z_{i}, & \mbox{ gdy } s_i = -1
+	\end{array} \right.
+	\]
+	Wartość średnia spinu:
+	\[ \langle s \rangle = p(s_i=1) - p(s_i=-1) = 2 \alpha -1 = \tanh (\beta \gamma H) \]
+	Fluktuacja magnetyzacji jest wyrażona następującą zależnością\cite{af}:
+	\[ \sigma_{M}^{2} = \langle (M-\langle M \rangle)^{2}\rangle = \gamma^{2} \sum^{N}_{i=1} \langle \left( 1-\langle s \rangle \right)^{2} \rangle  = \gamma^{2} N  \left( 1 - \langle s \rangle^{2} \right) \\ = \gamma^{2} N (1-\tanh^{2} (\beta \gamma H)) \]
+	\section{Implementacja}
+	Aplikacja symuluje rozkład spinów w idealnym paramagnetyku. Białe kwadraty reprezentują cząstki o spinie równym  $s_{i}\nolinebreak=\nolinebreak1$, a czarne odpowiednio $s_{i}\nolinebreak=\nolinebreak-1$. Dodatnia wartość pola oraz spinu odpowiada zwrotowi wektora wychodzącego przed płaczszczyznę monitora. Dla uproszczenia badanego przypadku zostały przyjęte wartości stałych równe jedności: $k_{B}=\gamma=1$. \\ \\
+	Zawartość załączonych plików źródłowych:\\
+		\begin{description}
+		\setlength{\itemindent}{0cm}
+		\item[Graph.java] - Klasa rysujaca wykres.
+		\item[GraphUpdater.java] - Klasa odpowiedzialna za wyznaczenie rozkładu spinów.
+		\item[ModificationListener.java] - Klasa odpowiedzialna za przechwytywanie zdarzeń z interfejsu.
+		\item[Window.java] - Klasa tworząca interfejs.
+		\end{description}
+		
+	\begin{thebibliography}{99}
+		\bibitem{az} A. Zagórski:
+			\emph{Fizyka Statystyczna},
+			 OFPW, Warszawa 1994
+		\bibitem{af} A. Fronczak:
+			\emph{Zadania i problemy z rozwiązaniami z termodynamiki i fizyki statystycznej},
+			 OFPW, Warszawa 2006
+		\end{thebibliography}
+	\end{document}
