@@ -26,13 +26,17 @@ public class Window extends JFrame
 	static String negativeDirection = new String("<html><h1>&#8855</h1></html>");
 	// tekst informujacy o kierunku pola magnetycznego
 	JLabel magFieldDirection = new JLabel(positiveDirection);
-	// wartosc fluktuacji
-	JLabel fluctuation = new JLabel("1.734");
+	// wartosc fluktuacji magnetyzacji
+	JLabel fluctuation = new JLabel("0");
+	// wartosc fluktuacji magnetyzacji
+	JLabel relativeFluctuation = new JLabel("0");
+	// wartosc magnetyzacji
+	JLabel magnetisation = new JLabel("0");
 	// suwak i spinner od regulacji natezenia zewnetrznego pola magnetycznego
 	JSlider magFieldSlider = new JSlider(-1000, 1000, 0);
 	JSpinner magFieldSpinner =  new JSpinner();
 	// suwak i spinner od regulacji temperatury
-	JSlider tempSlider = new JSlider(0, 300,100);
+	JSlider tempSlider = new JSlider(0, 500,100);
 	JSpinner tempSpinner =  new JSpinner();
 	// 18-krokowa regulacja zlozonosci wykresu
 	JSlider sizeSlider = new JSlider(1,18,14);
@@ -84,7 +88,7 @@ public class Window extends JFrame
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		controls.add(new JLabel("Natężenie pola H [MT]:"),c);
+		controls.add(new JLabel("Natężenie pola H: "),c);
 		
 		c.gridx = 2;
 		c.gridwidth = 1;
@@ -106,12 +110,13 @@ public class Window extends JFrame
 		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 1;
-		controls.add(new JLabel("Temperatura [K]:"),c);
+		controls.add(new JLabel("Temperatura: "),c);
 
 		c.gridx = 2;
 		c.gridwidth = 1;
 		tempSpinner.setPreferredSize(new Dimension(40, 20));
 		tempSpinner.addChangeListener(spinnerChange);
+		tempSpinner.setValue(100);
 		controls.add(tempSpinner,c);
 		
 		tempSlider.setPaintLabels(true);
@@ -149,11 +154,26 @@ public class Window extends JFrame
 		
 		c.gridy = 7;
 		c.gridwidth = 1;
-		controls.add(new JLabel("<html>Fluktuacje &#963;<sub>M</sub><sup>2</sup>: </html>"),c);
+		controls.add(new JLabel("<html>&#963;<sub>M</sub><sup>2</sup>: </html>"),c);
 		c.gridx = 1;
 		controls.add(fluctuation,c);
+		
+		c.gridy = 8;
+		c.gridx = 0;
+		c.gridwidth = 1;
+		controls.add(new JLabel("M: "),c);
+		c.gridx = 1;
+		controls.add(magnetisation,c);
 
-		controls.setPreferredSize(new Dimension(300, 300));
+		c.gridy = 9;
+		c.gridwidth = 1;
+		c.gridx = 0;
+		controls.add(new JLabel("<html>&#963;<sub>M</sub>/M: </html>"),c);
+		c.gridx = 1;
+		c.gridwidth = 1;
+		controls.add(relativeFluctuation,c);
+
+		controls.setPreferredSize(new Dimension(300, 350));
 		graph.setPreferredSize(new Dimension(600, 600));
 
 		graph.setBackground(Color.WHITE);
