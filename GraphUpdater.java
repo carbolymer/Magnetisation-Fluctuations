@@ -67,7 +67,6 @@ public class GraphUpdater
 		fl = mu0*mu0*mub*mub*N*(1-ms*ms);
 		M = mu0*mub*N*ms;
 		rfl = Math.sqrt(fl)/M;
-		//System.out.println("H: "+ H +"\tT: " + T +"\tes: "+ es + "\tms: "+ ms + "\tpositive: "+ positive +"\ta: "+alpha +"\tN: "+ N);
 		graph.repaint();
 		window.fluctuation.setText(Double.toString(round(fl,4)));
 		window.magnetisation.setText(Integer.toString((int)round(M,0)));
