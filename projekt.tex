@@ -12,26 +12,35 @@
 \frenchspacing
 \begin{document}
 	\maketitle
-	\section{Model Isinga}
+	\section{Cel projektu}
+	Celem projektu jest symulacja fluktuacji idealnego paramagnetyka w zewnętrznym polu magnetycznym opisanego za pomocą modelu Isinga. W tym celu została napisana aplikacja w Javie ilustrująca rozkład spinów w materiale magnetycznym oraz skrypt w Octave, który generuje wykresy zależności fluktuacji (względnej i bezwzględnej) magnetyzacji, a także samej magnetyzacji dla próbek o wielkości $N=200$ oraz $N=2000$ spinów.
+	\section{Opis teoretyczny}
 	Energia jednowymiarowego łańcucha spinów w modelu Isinga jest określona zależnością \cite{az}:
 	\[ E = -\sum^{N-1}_{i=1} J s_{i} s_{i+1} - H M \]
-	Magnetyzacja paramagnetyka wynosi:
-	\[ M = \gamma \sum^{N}_{i=1}s_{i} = \gamma N \langle s \rangle \]
+	Magnetyzacja materiału wynosi:
+	\begin{equation}
+	\label{magnetyzacja}
+	 M = \gamma \sum^{N}_{i=1}s_{i} = \gamma N \langle s \rangle 
+	\end{equation}
 	gdzie $J$ - oddziaływanie między węzłami, $s_{i}$ - spin i-tej cząstki w łańcuchu $s_{i} \in \{-1,1\}$, $\gamma$ - współczynnik proporcjonalności oddziaływania jednego elementu łańcucha z polem magnetycznym $H$, $N$ - ilość cząstek w łańcuchu, $\langle s \rangle$ - wartość średnia spinu w łańcuchu. W przypadku idealnego paramagnetyka mamy do czynienia z brakiem oddziaływania pomiędzy poszczególnymi spinami, więc współczynnik $J = 0$. Dla paramagnetyka energia oddziaływania pojedynczej cząstki wynosi $E_i = - \gamma H s_{i}$, a dla substancji wyraża się wzorem:
 	\[ E = \sum^{N}_{i=1} E_{i} =-\gamma H \sum^{N}_{i=1}s_{i} = -\gamma H N \langle s \rangle\]
 	Rozkład prawdopodobieństwa wystąpienia danego spinu dla cząstki jest rozkładem kanonicznym. Jednocząstkowa suma statystyczna wynosi\cite{az}:
 	\[ z_{i} = e^{- \beta \gamma H } + e^{\beta \gamma H} = 2 \cosh(\beta \gamma H); \hspace{1cm} \beta = \frac{1}{k_{B}T}  \]
 	Prawdopodobieństwo wystąpienia spinu w łańcuchu:
-	\[
+	\begin{equation}
+	\label{alfa}
 	p(s_i) = \left\{ \begin{array}{lll}
-	\alpha & = e^{\beta \gamma H} / z_{i}, & \mbox{ gdy } s_i = 1 \\
+	\alpha & = e^{\beta \gamma H} / z_{i}, & \mbox{ gdy } s_i = +1 \\
 	1-\alpha & = e^{ -\beta \gamma H} / z_{i}, & \mbox{ gdy } s_i = -1
 	\end{array} \right.
-	\]
+	\end{equation}
 	Wartość średnia spinu:
 	\[ \langle s \rangle = p(s_i=1) - p(s_i=-1) = 2 \alpha -1 = \tanh (\beta \gamma H) \]
 	Fluktuacja magnetyzacji jest wyrażona następującą zależnością\cite{af}:
-	\[ \sigma_{M}^{2} = \langle (M-\langle M \rangle)^{2}\rangle = \gamma^{2} \sum^{N}_{i=1} \langle \left( 1-\langle s \rangle \right)^{2} \rangle  = \gamma^{2} N  \left( 1 - \langle s \rangle^{2} \right) \\ = \gamma^{2} N (1-\tanh^{2} (\beta \gamma H)) \]
+	\begin{equation}
+	\label{fluktuacja}
+	\sigma_{M}^{2} = \langle (M-\langle M \rangle)^{2}\rangle \\ = \gamma^{2} \sum^{N}_{i=1} \langle \left( 1-\langle s \rangle \right)^{2} \rangle  = \gamma^{2} N  \left( 1 - \langle s \rangle^{2} \right) \\ = \gamma^{2} N (1-\tanh^{2} (\beta \gamma H))
+	\end{equation}
 	\section{Wyniki symulacji}
 	Za pomocą skryptu {\bf simulation.m } zostały wygenerowane wykresy fluktuacji oraz magnetyzacji dla paramagnetyka o ilości spinów $N=200$ oraz $N=2000$. Dla uproszczenia sytuacji zostały przyjęte stałe $k_{B}=\gamma=1$.
 	
@@ -43,13 +52,14 @@
 		\includegraphics[width=1\textwidth]{rel_fl_200.png}
 
 		\includegraphics[width=1\textwidth]{rel_fl_2000.png}
-
+	Na wykresach fluktuacji jest zauważalne tworzenie się porządku w sieci spinów (spadek wartości $\sigma_{M}^{2}$ oraz $\sigma_{M}/|M|$) wraz z wzrastającą wartością $|\beta H|$.\\
 		\includegraphics[width=1\textwidth]{M_200.png}
 
 		\includegraphics[width=1\textwidth]{M_2000.png}
-	
+	Zauważalne jest asymptotyczne zbieganie magnetyzacji do określonych wartości dla dużych natężeń pola magnetycznego - następuje wtedy uporządkowanie większości spinów w jednym kierunku. Dla małych natężeń pola magnetycznego wykres magnetyzacji jest prawie liniowy - na tym obszarze jest dobrze spełnione prawo Curie.\\
+	Na wszystkich wykresach jest zauważalne zbieganie się wyników z symulacji z krzywymi teoretycznymi wraz z wzrostem liczby spinów.
 	\section{Implementacja}
-	Dołączona aplikacja napisana w Javie symuluje rozkład spinów w idealnym paramagnetyku. Białe kwadraty reprezentują cząstki o spinie równym  $s_{i}\nolinebreak=\nolinebreak1$, a czarne odpowiednio $s_{i}\nolinebreak=\nolinebreak-1$. Dodatnia wartość pola oraz spinu odpowiada zwrotowi wektora wychodzącego przed płaczszczyznę monitora. Dla uproszczenia badanego przypadku zostały przyjęte wartości stałych równe jedności: $k_{B}=\gamma=1$.\\ \\
+	Dołączona aplikacja napisana w Javie symuluje rozkład spinów w idealnym paramagnetyku. Białe kwadraty reprezentują cząstki o spinie równym  $s_{i}\nolinebreak=\nolinebreak1$, a czarne odpowiednio $s_{i}\nolinebreak=\nolinebreak-1$. Dodatnia wartość pola oraz spinu odpowiada zwrotowi wektora wychodzącego przed płaczszczyznę monitora. Dla uproszczenia badanego przypadku zostały przyjęte wartości stałych równe jedności: $k_{B}=\gamma=1$. Wartości spinów są generowane za pomocą generatora liczb pseudolosowych z zakresu $[0,1]$, a następnie wylosowana wartość jest porównywana z parametrem $\alpha$ (\ref{alfa}) co pozwala przypisać poszczególnym komórkom na wykresie odpowiadające im wartości spinów. Magnetyzacja i fluktuacja jest obliczana odpowiednio ze wzorów: (\ref{magnetyzacja}) i (\ref{fluktuacja}). \\ \\
 	Zawartość załączonych plików źródłowych:\\
 		\begin{description}
 		\setlength{\itemindent}{0cm}
@@ -57,7 +67,6 @@
 		\item[GraphUpdater.java] - Klasa odpowiedzialna za wyznaczenie rozkładu spinów.
 		\item[ModificationListener.java] - Klasa odpowiedzialna za przechwytywanie zdarzeń z interfejsu.
 		\item[Window.java] - Klasa tworząca interfejs.
-		\item[prezentacja.odp] - Prezentacja projektu.
 		\item[simulation.m] - Skrypt w Octave symulujący zachowanie się paramagnetyka i generujący wykresy fluktuacji.
 		\end{description}
 		
